@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bituon_mobprog/constants.dart';
-import 'package:bituon_mobprog/screens/newsfeed_screen.dart';
-import 'package:bituon_mobprog/widgets/custom_text.dart';
+import 'package:hernandez_mobprog/constants.dart';
+import 'package:hernandez_mobprog/screens/newsfeed_screen.dart';
+import 'package:hernandez_mobprog/widgets/custom_text.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

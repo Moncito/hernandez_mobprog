@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bituon_mobprog/widgets/custom_text.dart';
-import 'package:bituon_mobprog/widgets/post_image.dart';
-import 'package:bituon_mobprog/widgets/post_action_button.dart';
+import 'package:hernandez_mobprog/widgets/custom_text.dart';
+import 'package:hernandez_mobprog/widgets/post_image.dart';
+import 'package:hernandez_mobprog/widgets/post_action_button.dart';
 
 class NewsFeedCard extends StatelessWidget {
   final String userName;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bituon_mobprog/widgets/newsfeed_card.dart';
+import 'package:hernandez_mobprog/widgets/newsfeed_card.dart';
 
 class NewsFeedScreen extends StatelessWidget {
   const NewsFeedScreen({super.key});
