@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hernandez_mobprog/constants.dart';
 import 'package:hernandez_mobprog/screens/newsfeed_screen.dart';
+import 'package:hernandez_mobprog/screens/notification_screen.dart';
 import 'package:hernandez_mobprog/widgets/custom_text.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _pageController,
         children: const [
           NewsFeedScreen(),
+          NotificationScreen(),
         ],
         onPageChanged: (page) {
           setState(() {
