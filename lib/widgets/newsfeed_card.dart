@@ -1,118 +1,110 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hernandez_mobprog/constants.dart';
+import 'package:hernandez_mobprog/models/post.dart';
 import 'package:hernandez_mobprog/widgets/custom_text.dart';
 import 'package:hernandez_mobprog/widgets/post_action_button.dart';
 import 'package:hernandez_mobprog/widgets/post_image.dart';
 
 class NewsFeedCard extends StatelessWidget {
-  final String userName;
-  final String postContent;
-  final String date;
-  final int? numOfLikes;
+  final Post post;
 
-  /// Path of the post image. When null, the card shows no image.
-  final String? imagePath;
-
-  /// Path of the user's profile picture.
-  final String avatarPath;
-
-  const NewsFeedCard({
-    super.key,
-    required this.userName,
-    required this.postContent,
-    required this.date,
-    this.numOfLikes,
-    this.imagePath,
-    this.avatarPath = 'assets/images/profile.jpg',
-  });
-
-  bool get hasImage => imagePath != null;
+  const NewsFeedCard({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
     final double screenUtil10 = ScreenUtil().setSp(10);
     final double screenUtil15 = ScreenUtil().setWidth(15);
-    final double screenUtilFontUserNameSize = ScreenUtil().setSp(15);
-    final double screenUtilIconSize = ScreenUtil().setSp(15);
 
     return Card(
-      margin: EdgeInsets.all(screenUtil15),
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(
+        horizontal: screenUtil15,
+        vertical: ScreenUtil().setHeight(8),
+      ),
       child: Padding(
         padding: EdgeInsets.all(screenUtil15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // User Info (Enhancement 2: avatar image)
+            // User Info
             Row(
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: AssetImage(avatarPath),
+                  backgroundColor: fbLightPrimary,
+                  backgroundImage: AssetImage(post.avatarPath),
                 ),
                 SizedBox(width: screenUtil10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: userName,
-                      fontSize: screenUtilFontUserNameSize,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    Row(
-                      children: [
-                        CustomText(
-                          text: date,
-                          fontSize: ScreenUtil().setSp(12),
-                          color: Colors.grey,
-                        ),
-                        SizedBox(width: ScreenUtil().setWidth(3)),
-                        Icon(
-                          Icons.public,
-                          color: Colors.grey,
-                          size: screenUtilIconSize,
-                        ),
-                      ],
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomText(
+                        text: post.userName,
+                        fontSize: ScreenUtil().setSp(15),
+                        color: fbDarkPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      Row(
+                        children: [
+                          // Enhancement 1: date per post
+                          CustomText(
+                            text: formatDate(post.date),
+                            fontSize: ScreenUtil().setSp(12),
+                            color: Colors.grey,
+                          ),
+                          SizedBox(width: ScreenUtil().setWidth(3)),
+                          Icon(
+                            Icons.public,
+                            color: Colors.grey,
+                            size: ScreenUtil().setSp(15),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
+                const Icon(Icons.more_horiz, color: fbSecondary),
               ],
             ),
 
-            SizedBox(height: ScreenUtil().setHeight(5)),
+            SizedBox(height: ScreenUtil().setHeight(8)),
 
-            // Post Content
             CustomText(
-              text: postContent,
-              fontSize: ScreenUtil().setSp(12),
-              color: Colors.black,
+              text: post.content,
+              fontSize: ScreenUtil().setSp(13),
+              color: fbDarkPrimary,
             ),
 
-            SizedBox(height: ScreenUtil().setHeight(5)),
+            SizedBox(height: ScreenUtil().setHeight(8)),
 
-            // Enhancement 1: image widget, shown only when the post has an image
-            if (hasImage) PostImage(imagePath: imagePath!),
+            // Enhancement 1: real image, placeholder, or none
+            if (post.imagePath != null)
+              PostImage(imagePath: post.imagePath!)
+            else if (post.hasPlaceholder)
+              const PostImagePlaceholder(),
 
             const SizedBox(height: 10),
 
-            // Reactions summary
+            // Enhancement 1: dynamic number of values
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.thumb_up, color: Colors.blue, size: 18),
+                    const Icon(Icons.thumb_up, color: fbPrimary, size: 18),
                     const SizedBox(width: 5),
-                    Text('${numOfLikes ?? 0}'),
+                    Text(formatCount(post.numOfLikes)),
                   ],
                 ),
-                const Text('42 Comments · 5 Shares'),
+                Text(
+                  '${_plural(post.numOfComments, 'Comment')} · '
+                  '${_plural(post.numOfShares, 'Share')}',
+                ),
               ],
             ),
 
-            const SizedBox(height: 10),
-
-            // Enhancement 3: widget-based action buttons
             const Divider(),
             Row(
               children: [
@@ -138,9 +130,9 @@ class NewsFeedCard extends StatelessWidget {
             // Comment Box
             Row(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 12,
-                  backgroundImage: AssetImage(avatarPath),
+                  backgroundImage: AssetImage('assets/images/profile.jpg'),
                 ),
                 Expanded(
                   child: Container(
@@ -150,7 +142,7 @@ class NewsFeedCard extends StatelessWidget {
                       vertical: ScreenUtil().setHeight(8),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
+                      color: fbLightPrimary.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const CustomText(
@@ -163,17 +155,23 @@ class NewsFeedCard extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: ScreenUtil().setHeight(10)),
-
-            CustomText(
-              text: 'View all comments',
-              fontSize: ScreenUtil().setSp(12),
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+            if (post.numOfComments > 0) ...[
+              SizedBox(height: ScreenUtil().setHeight(10)),
+              CustomText(
+                text: post.numOfComments == 1
+                    ? 'View 1 comment'
+                    : 'View all ${formatCount(post.numOfComments)} comments',
+                fontSize: ScreenUtil().setSp(12),
+                fontWeight: FontWeight.bold,
+                color: fbSecondary,
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 }
+
+String _plural(int count, String word) =>
+    '${formatCount(count)} $word${count == 1 ? '' : 's'}';
