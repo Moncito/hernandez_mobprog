@@ -13,7 +13,6 @@ class NewsFeedScreen extends StatelessWidget {
           postContent: 'I can do this all day! #AvengersAssemble',
           date: '2 hours ago',
           numOfLikes: 10,
-          hasImage: false,
         ),
 
         NewsFeedCard(
@@ -22,7 +21,7 @@ class NewsFeedScreen extends StatelessWidget {
               'I am Iron Man. #GeniusBillionairePlayboyPhilanthropist',
           date: 'December 1, 2023',
           numOfLikes: 3000,
-          hasImage: true,
+          imagePath: 'assets/images/iron_man.jpg',
         ),
       ],
     );
